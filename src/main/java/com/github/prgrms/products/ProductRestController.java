@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.github.prgrms.utils.ApiUtils.ApiResult;
+import static com.github.prgrms.utils.ApiUtils.success;
+
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -20,20 +23,24 @@ public class ProductRestController {
     this.productService = productService;
   }
 
-  // FIXME `요건 1` 정의에 맞게 응답 타입 수정이 필요합니다.
+  // FIXME `요건 1` 정의에 맞게 응답 타입 수정이 필요합니다. 
   @GetMapping(path = "{id}")
-  public ProductDto findById(@PathVariable Long id) {
-    return productService.findById(id)
-      .map(ProductDto::new)
-      .orElseThrow(() -> new NotFoundException("Could not found product for " + id));
+  public ApiResult<ProductDto> findById(@PathVariable Long id) {
+    return success(
+      productService.findById(id)
+        .map(ProductDto::new)
+        .orElseThrow(() -> new NotFoundException("Could nof found user for " + id))
+    );
   }
+
 
   // FIXME `요건 1` 정의에 맞게 응답 타입 수정이 필요합니다.
   @GetMapping
-  public List<ProductDto> findAll() {
-    return productService.findAll().stream()
+  public ApiResult<List<ProductDto>> findAll() {
+    /*return productService.findAll().stream()
       .map(ProductDto::new)
-      .collect(toList());
+      .collect(toList());*/
+    return success(productService.findAll().stream().map(ProductDto::new).collect(toList()));
   }
 
 }
